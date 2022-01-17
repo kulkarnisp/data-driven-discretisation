@@ -1,4 +1,6 @@
-
+# from ast import Interactive
+from ipywidgets import interactive
+import numpy as np
 import torch
 import torch.nn as nn
 import matplotlib.pyplot as plt
@@ -59,6 +61,19 @@ class Trainer:
         self.eplot(self.ytrain[j],self.ypred[j])
         return 0
         # s=0
+
+    def iplot(self,x,y):
+        f = lambda j : self.eplot(x[j],y[j])
+        return interactive(f,j=range(len(x)))
+       
+    def time_stepping(self,tend,xinit):
+        y = xinit.reshape(1,1,-1)
+        outarr = []
+        for i in range(int(tend)):
+            y = self.predict(y)
+            outarr.append(y[0].data.numpy()) 
+        return torch.Tensor(np.array(outarr))
+
     
 
 def trainn(datloader,anet,N_Epochs=40,LR=0.005):
