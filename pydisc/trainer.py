@@ -23,29 +23,42 @@ class Trainer:
         self.loader = get_loader(self.xtrain,self.ytrain,
                                 BATCH_SIZE=BATCH_SIZE)
 
-    def fit(self):
+    def fit(self,do_eval=True):
         self.loss_arr = trainn(self.loader,self.net,self.EPOCHS,self.LR)
-        self.yhat = self.net(self.xtrain)
+        if do_eval:
+            self.train_eval()
+        # self.yhat = self.predict(self.xtrain)
 
     def predict(self,x):
         yhat =  x- prediction(x,self.net(x)) #*DTIME
         return  yhat.detach()
 
+    def train_eval(self):
+        self.net = self.net.eval()
+        self.ypred = self.predict(self.xtrain)
+        self.train_accuracy = torch.mean((self.ytrain-self.ypred)**2)**0.5
+
+    def test_eval(self,testdata):
+        x,y = get_train(testdata)
+        self.net = self.net.eval()
+        yhat = self.predict(x)
+        self.test_accuracy = torch.mean((y-yhat)**2)**0.5
+        self.yhat = yhat
+        self.ytest = y
+        # return 
+
     def eplot(self,y,yhat):
         y = y.squeeze_().detach().numpy()
-        y = yhat.squeeze_().detach().numpy()
+        yhat = yhat.squeeze_().detach().numpy()
         fig = plot_compare(y,yhat)
         plt.show()
-        return 0
+        # return 0
 
-    def eval(self,test_dat):
-        x,y = get_train(test_dat)
+    def jplot(self,j):
         # self.xtest = 
-        yhat = self.predict(x)
-        return y,yhat
-        s=0
-
-    # def     
+        self.eplot(self.ytrain[j],self.ypred[j])
+        return 0
+        # s=0
     
 
 def trainn(datloader,anet,N_Epochs=40,LR=0.005):
