@@ -2,6 +2,9 @@
 __pycache__/
 _repos_/
 repos/
+*.nc
+*.h5
+
 *.py[cod]
 *$py.class
 

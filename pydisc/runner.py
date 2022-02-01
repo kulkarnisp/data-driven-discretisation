@@ -6,7 +6,7 @@ from ipywidgets import interact,interactive
 
 import torch
 import torch.nn as nn
-
+## to do add multi step time loss
 from .loader import vanler_data,get_train
 from .loader import get_loader,Simulation
 from .model import AlphaNet
